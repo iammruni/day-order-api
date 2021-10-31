@@ -3,8 +3,8 @@ from csv import writer
 from passlib.hash import sha256_crypt
 
 
-
 key_path = './data/hashdb.csv'
+
 
 def store_api_key(key, permissions):
 	"""Saves the given API Key
@@ -17,7 +17,7 @@ def store_api_key(key, permissions):
 		writer_object = writer(f_object)
 		writer_object.writerow(templ)
 		f_object.close()
-	
+
 
 def generate(user, save=False, permissions=1):
 	"""Generate an API Key
@@ -32,7 +32,7 @@ def ver(pas, metho):
 	"""Verify the API Key
 	"""
 
-	#Permissions: 1 = GET; 2 = POST; 3 = GET&POST; 0 = BLACKLIST
+	# Permissions: 1 = GET; 2 = POST; 3 = GET&POST; 0 = BLACKLIST
 	data = pd.read_csv(key_path, header=0)
 	data = data.to_dict('list')
 	count = len(data['hash'])
@@ -41,12 +41,12 @@ def ver(pas, metho):
 	err_code = 200
 
 	for i in data['hash']:
-		if(sha256_crypt.verify(pas, i)):
+		if sha256_crypt.verify(pas, i):
 			flag =True
 			pert = data['hash'].index(str(i))
 			perm = data['permissions'][pert]
 			if int(perm) == 1:
-				if(metho == "get"):
+				if metho == "get":
 					flag = True
 					err_code = 200
 					return flag, "", err_code
@@ -55,8 +55,8 @@ def ver(pas, metho):
 					flag = False
 					return flag, "This API Key does not have permission to use this method", 401
 
-			elif (int(perm) == 2):
-				if(metho == "post" ):
+			elif int(perm) == 2:
+				if metho == "post":
 					flag = True
 					err_code= 200
 					return flag, "", err_code
@@ -64,23 +64,22 @@ def ver(pas, metho):
 				else:
 					flag = False
 					return flag, "This API Key does not have permission to use this method", 401
-			elif (int(perm) == 3):
-				if(metho == "get" or metho == "post"):
+			elif int(perm) == 3:
+				if metho == "get" or metho == "post":
 					flag = True
 					err_code= 200
 					return flag, "", err_code
 					break
 				else:
 					flag = False
-			elif (int(perm) == 0):
-				#Blacklist
+			elif int(perm) == 0:
+				# Blacklist
 				flag = False
-				err_code= 403
+				err_code = 403
 				return flag, "This API Key has been blacklisted. See you in hell, b*!", err_code
 		else:
 			flag = False
 			message = "Invalid API Key!"
 			err_code = 403
-
 
 	return flag, message, err_code
