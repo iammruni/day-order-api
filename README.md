@@ -10,3 +10,11 @@ _Not an in depth explanation_
 ## The API Keys
 The API Key can be any string. It has a permissions integer associated with it. Permissions: 1 = GET; 2 = POST; 3 = GET and POST; 0 = BLACKLIST
 The keys are hashed using SHA256 and stored.
+
+## Requirements
+
+Flask_HTTPAuth==4.5.0
+Flask==1.1.2
+passlib==1.7.4
+pandas==1.2.1
+Flask_RESTful==0.3.9
