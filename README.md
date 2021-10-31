@@ -4,6 +4,7 @@ My college, SRM-IST, has a system in place to decide the schedule of the courses
 
 # How It Works
 _Not an in depth explanation_
+
 `flask_api.py` is the main file that needs to be run to start the app. It initializes the app, the endpoints and defines the get and post methods.
 `api_key.py` is the backend to **generate**, **save** and **verify** the API Keys. It uses the `encrypt` function of the `sha256_crypt` class from `passlib` library.
 ## The API Keys
