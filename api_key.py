@@ -45,7 +45,6 @@ def ver(pas, metho):
 			flag =True
 			pert = data['hash'].index(str(i))
 			perm = data['permissions'][pert]
-			print(int(perm))
 			if int(perm) == 1:
 				if(metho == "get"):
 					flag = True
