@@ -14,7 +14,11 @@ The keys are hashed using SHA256 and stored.
 ## Requirements
 
 Flask_HTTPAuth==4.5.0
+
 Flask==1.1.2
+
 passlib==1.7.4
+
 pandas==1.2.1
+
 Flask_RESTful==0.3.9
