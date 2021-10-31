@@ -44,19 +44,35 @@ class info(Resource):
 	def post(self):
 		parser = reqparse.RequestParser()
 		parser.add_argument('day_order', required=True, type=int)
+		parser.add_argument('key', required=True, type=str)
 		args = parser.parse_args()
-		if 0 <= args['day_order'] <= 5:
-			data = pd.read_csv(info_path)
-			data['day_order'] = int(args["day_order"])
-			data['working_day'] = (True if(0 < args["day_order"] <= 5) else False)
-			time_now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-			data['lastupdated'] = time_now
-			data.to_csv(info_path, index=False)
-			return data.to_dict(), 200
+
+		if not 'key' in args:
+			return{
+				'message': {
+					'key': 'Missing required parameter. API Key missing!'
+				}
+			}, 403
+
 		else:
-			return {
-				'message': f"day_order arg passed ({args['day_order']}) has a range of 0-5."
-			}, 409
+			res = api_key.ver(args['key'], "post")
+			if res[0]:
+				if 0 <= args['day_order'] <= 5:
+					data = pd.read_csv(info_path)
+					data['day_order'] = int(args["day_order"])
+					data['working_day'] = (True if(0 < args["day_order"] <= 5) else False)
+					time_now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+					data['lastupdated'] = time_now
+					data.to_csv(info_path, index=False)
+					return data.to_dict(), 200
+				else:
+					return {
+						'message': f"day_order arg passed ({args['day_order']}) has a range of 0-5."
+					}, 409
+			else:
+				return{
+					'message': res[1]
+				}, res[2]
 
 # set 'info' class at 'info' endpoint
 
@@ -64,4 +80,4 @@ class info(Resource):
 api.add_resource(info, '/info')
 
 if __name__ == "__main__":
-	app.run(threaded=True, port=5000)
+	app.run(threaded=True, port=5000, debug=True)
